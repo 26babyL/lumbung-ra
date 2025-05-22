@@ -1,0 +1,33 @@
+<!-- core/templates/layout.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Lumbung POS{% endblock %}</title>
+    <link href="{% static 'css/output.css' %}" rel="stylesheet">
+</head>
+<body class="flex h-screen bg-gray-100 text-gray-900">
+
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white shadow-lg border-r">
+        <div class="p-6 font-bold text-xl border-b">Lumbung POS</div>
+        <nav class="mt-4">
+            <ul>
+                <li class="px-6 py-3 hover:bg-gray-200"><a href="#">Dashboard</a></li>
+                <li class="px-6 py-3 hover:bg-gray-200"><a href="#">Penjualan</a></li>
+                <li class="px-6 py-3 hover:bg-gray-200"><a href="#">Inventori</a></li>
+                <li class="px-6 py-3 hover:bg-gray-200"><a href="#">Laporan</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 overflow-y-auto p-6">
+        {% block content %}
+        <!-- konten halaman -->
+        {% endblock %}
+    </main>
+
+</body>
+</html>
