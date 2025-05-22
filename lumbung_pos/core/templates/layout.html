@@ -14,13 +14,18 @@
     <aside class="w-64 bg-white shadow-lg border-r">
         <div class="p-6 font-bold text-xl border-b">Lumbung POS</div>
         <nav class="mt-4">
-            <ul>
-                <li class="px-6 py-3 hover:bg-gray-200"><a href="#">Dashboard</a></li>
-                <li class="px-6 py-3 hover:bg-gray-200"><a href="#">Penjualan</a></li>
-                <li class="px-6 py-3 hover:bg-gray-200"><a href="#">Inventori</a></li>
-                <li class="px-6 py-3 hover:bg-gray-200"><a href="#">Laporan</a></li>
-            </ul>
-        </nav>
+  <ul>
+    <li class="px-6 py-3 hover:bg-gray-200"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+    <li class="px-6 py-3 hover:bg-gray-200"><a href="{% url 'products' %}">Products</a></li>
+    <li class="px-6 py-3 hover:bg-gray-200"><a href="{% url 'inventory' %}">Inventory</a></li>
+    <li class="px-6 py-3 hover:bg-gray-200"><a href="{% url 'sales' %}">Sales</a></li>
+    <li class="px-6 py-3 hover:bg-gray-200"><a href="{% url 'transfers' %}">Transfers</a></li>
+    <li class="px-6 py-3 hover:bg-gray-200"><a href="{% url 'reports' %}">Reports</a></li>
+    <li class="px-6 py-3 hover:bg-gray-200"><a href="{% url 'team' %}">Team</a></li>
+    <li class="px-6 py-3 hover:bg-gray-200"><a href="{% url 'settings' %}">Settings</a></li>
+  </ul>
+</nav>
+
     </aside>
 
     <!-- Main Content -->
