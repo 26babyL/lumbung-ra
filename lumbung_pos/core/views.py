@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required, user_passes_test
 
 # Create your views here.
 def dashboard_view(request):
@@ -21,3 +22,7 @@ def team_view(request):
     return render(request, 'team.html')
 def settings_view(request): 
     return render(request, 'settings.html')
+@user_passes_test(lambda u: u.is_superuser)
+@login_required
+def admin_dashboard(request):
+    return render(request, 'admin_dashboard.html')
