@@ -1,51 +1,389 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Lumbung POS{% endblock %}</title>
-    <link href="{% static 'css/input.css' %}" rel="stylesheet">
-    <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+  <title>{% block title %}Lumbung POS{% endblock %}</title>
+  <link href="{% static 'css/dist/styles.css' %}" rel="stylesheet">
+  <link href="{% static 'css/dist/customlayout.css' %}" rel="stylesheet">
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
+
 <body class="bg-gray-100 text-gray-900 font-sans">
 
-  <div class="flex min-h-screen">
+  <!-- Topbar -->
+  <header class="bg-white shadow px-6 py-4 flex justify-between items-center topbar-fixed">
+    <div class="flex items-center gap-3">
+      <span class="text-xl font-bold">Lumbung POS</span>
+    </div>
+    <div class="text-sm text-gray-600">
+      Selamat datang, <span class="font-semibold">{{ request.user.username }}</span>
+    </div>
+  </header>
 
+  <div class="flex min-h-screen">
     <!-- Sidebar -->
-    <aside class="w-64 bg-white border-r shadow-lg hidden md:block">
-      <div class="p-6 text-xl font-bold border-b">Lumbung POS</div>
-      <nav class="mt-4">
-        <ul class="space-y-2 px-4 text-sm">
-          <li><a href="{% url 'dashboard' %}" class="block px-4 py-2 rounded hover:bg-gray-200">Dashboard</a></li>
-          <li><a href="{% url 'products' %}" class="block px-4 py-2 rounded hover:bg-gray-200">Products</a></li>
-          <li><a href="{% url 'inventory' %}" class="block px-4 py-2 rounded hover:bg-gray-200">Inventory</a></li>
-          <li><a href="{% url 'sales' %}" class="block px-4 py-2 rounded hover:bg-gray-200">Sales</a></li>
-          <li><a href="{% url 'transfers' %}" class="block px-4 py-2 rounded hover:bg-gray-200">Transfers</a></li>
-          <li><a href="{% url 'reports' %}" class="block px-4 py-2 rounded hover:bg-gray-200">Reports</a></li>
-          <li><a href="{% url 'team' %}" class="block px-4 py-2 rounded hover:bg-gray-200">Team</a></li>
-          <li><a href="{% url 'settings' %}" class="block px-4 py-2 rounded hover:bg-gray-200">Settings</a></li>
+    <aside class="bg-white text-gray-900 flex flex-col shadow-lg sidebar-fixed border-r border-gray-200">
+      <div class="p-6 text-lg font-bold border-b border-gray-200 tracking-wide flex items-center gap-2 text-blue-800">
+        <span class="text-blue-500">●</span> Menu
+      </div>
+      <nav class="flex-1 mt-4 overflow-y-auto">
+        <ul class="space-y-2 px-2 text-base">
+
+          <!-- Dashboard Link -->
+          <li>
+            <a href="{% url 'dashboard' %}"
+              class="flex items-center gap-3 px-4 py-2 rounded-lg font-semibold text-white bg-blue-700 hover:bg-blue-800 transition">
+              <span class="material-icons-outlined">dashboard</span>
+              Dashboard
+            </a>
+          </li>
+          <a href="{% url 'notifications' %}"
+            class="flex items-center gap-3 px-4 py-2 rounded hover:bg-gray-800 transition {% if request.resolver_match.url_name == 'notifications' %}bg-yellow-700 text-white font-bold{% endif %}">
+            <span class="material-icons-outlined text-yellow-400">notifications</span>
+            Inbox
+          </a>
+          </li>
+          <!-- Products Dropdown -->
+          <li x-data="{ open: false }">
+            <button @click="open = !open"
+              class="w-full flex items-center justify-between px-4 py-2 rounded-lg font-semibold text-blue-800 bg-white hover:bg-blue-50 focus:bg-blue-100 transition focus:outline-none">
+              <span class="flex items-center gap-3">
+                <span class="material-icons-outlined">inventory_2</span>
+                Products
+              </span>
+              <span class="material-icons-outlined text-xs" x-text="open ? 'expand_less' : 'expand_more'"></span>
+            </button>
+            <ul class="ml-8 mt-1 space-y-1" x-show="open" x-transition>
+              <li>
+                <a href="{% url 'products' %}" class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Product
+                  List</a>
+              </li>
+              <li>
+                <a href="{% url 'add_product' %}" class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Add
+                  New Product</a>
+              </li>
+              <li>
+                <a href="{% url 'categories' %}" class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Product
+                  Categories</a>
+              </li>
+            </ul>
+          </li>
+          <!-- Inventory Management Submenu -->
+          <li x-data="{ open: false }">
+            <button @click="open = !open"
+              class="w-full flex items-center gap-3 px-4 py-2 rounded hover:bg-gray-800 transition text-yellow-400 font-semibold focus:outline-none">
+              <span class="material-icons-outlined">store</span>
+              Inventory Management
+              <span class="ml-auto material-icons-outlined text-xs"
+                x-text="open ? 'expand_less' : 'expand_more'"></span>
+            </button>
+            <ul class="ml-8 space-y-1" x-show="open" x-transition>
+              <li>
+                <a href="{% url 'inventory_planner' %}" class="block px-2 py-1 rounded hover:bg-gray-800">
+                  Inventory Planner
+                </a>
+              </li>
+              <li>
+                <a href="{% url 'stock_movement' %}" class="block px-2 py-1 rounded hover:bg-gray-800">
+                  Stock Movement
+                </a>
+              </li>
+            </ul>
+          </li>
+          <!-- Sales Submenu -->
+          <li x-data="{ open: false }">
+            <button @click="open = !open"
+              class="w-full flex items-center gap-3 px-4 py-2 rounded hover:bg-gray-800 transition text-pink-400 font-semibold focus:outline-none">
+              <span class="material-icons-outlined">point_of_sale</span>
+              Sales
+              <span class="ml-auto material-icons-outlined text-xs"
+                x-text="open ? 'expand_less' : 'expand_more'"></span>
+            </button>
+            <ul class="ml-8 space-y-1" x-show="open" x-transition>
+              <li>
+                <a href="{% url 'sales_insights' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Sales
+                  Insights</a>
+              </li>
+              <li>
+                <a href="{% url 'pricing_strategies' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Pricing
+                  Strategies</a>
+              </li>
+              <li>
+                <a href="{% url 'store_comparison' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Store
+                  Comparison</a>
+              </li>
+            </ul>
+          </li>
+          <!-- Transfer & Logistics Submenu -->
+          <li x-data="{ open: false }">
+            <button @click="open = !open"
+              class="w-full flex items-center justify-between px-4 py-2 rounded hover:bg-gray-800 transition text-purple-400 font-semibold focus:outline-none">
+              <span class="flex items-center gap-3">
+                <span class="material-icons-outlined">swap_horiz</span>
+                Transfer & Logistics
+              </span>
+              <span class="material-icons-outlined text-xs" x-text="open ? 'expand_less' : 'expand_more'"></span>
+            </button>
+            <ul class="ml-8 space-y-1" x-show="open" x-transition>
+              <li>
+                <a href="{% url 'request_items' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Request Items</a>
+              </li>
+              <li>
+                <a href="{% url 'shipments_tracking' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Shipments
+                  Tracking</a>
+              </li>
+              <li>
+                <a href="{% url 'delivery_status' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Delivery
+                  Status</a>
+              </li>
+            </ul>
+          </li>
+
+          <!-- Secondary Group (Analysis & Support) -->
+          <li class="uppercase text-xs text-gray-400 px-4 mt-6 mb-1 tracking-wider">Analysis & Support</li>
+          <!-- Reports & Analytics Submenu -->
+          <li x-data="{ open: false }">
+            <button @click="open = !open"
+              class="w-full flex items-center justify-between px-4 py-2 rounded hover:bg-gray-800 transition text-indigo-400 font-semibold focus:outline-none">
+              <span class="flex items-center gap-3">
+                <span class="material-icons-outlined">bar_chart</span>
+                Reports & Analytics
+              </span>
+              <span class="material-icons-outlined text-xs" x-text="open ? 'expand_less' : 'expand_more'"></span>
+            </button>
+            <ul class="ml-8 space-y-1" x-show="open" x-transition>
+              <li>
+                <a href="{% url 'reports' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Reports</a>
+              </li>
+              <li>
+                <a href="{% url 'market_trends' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Market Trends</a>
+              </li>
+              <li>
+                <a href="{% url 'custom_reports' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Custom
+                  Reports</a>
+              </li>
+            </ul>
+          </li>
+          <!-- Market Research Submenu -->
+          <li x-data="{ open: false }">
+            <button @click="open = !open"
+              class="w-full flex items-center justify-between px-4 py-2 rounded hover:bg-gray-800 transition text-orange-400 font-semibold focus:outline-none">
+              <span class="flex items-center gap-3">
+                <span class="material-icons-outlined">insights</span>
+                Market Research
+              </span>
+              <span class="material-icons-outlined text-xs" x-text="open ? 'expand_less' : 'expand_more'"></span>
+            </button>
+            <ul class="ml-8 space-y-1" x-show="open" x-transition>
+              <li>
+                <a href="{% url 'competitor_analysis' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Competitor
+                  Analysis</a>
+              </li>
+              <li>
+                <a href="{% url 'vendor_management' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Vendor
+                  Management</a>
+              </li>
+            </ul>
+          </li>
+          <!-- Business Dynamics Submenu -->
+          <li x-data="{ open: false }">
+            <button @click="open = !open"
+              class="w-full flex items-center justify-between px-4 py-2 rounded hover:bg-gray-800 transition text-cyan-400 font-semibold focus:outline-none">
+              <span class="flex items-center gap-3">
+                <span class="material-icons-outlined">trending_up</span>
+                Business Dynamics
+              </span>
+              <span class="material-icons-outlined text-xs" x-text="open ? 'expand_less' : 'expand_more'"></span>
+            </button>
+            <ul class="ml-8 space-y-1" x-show="open" x-transition>
+              <li>
+                <a href="{% url 'business_health' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Business
+                  Health</a>
+              </li>
+              <li>
+                <a href="{% url 'trend_tracker' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Trend Tracker</a>
+              </li>
+            </ul>
+          </li>
+          <!-- System Health Check Submenu -->
+          <li x-data="{ open: false }">
+            <button @click="open = !open"
+              class="w-full flex items-center justify-between px-4 py-2 rounded hover:bg-gray-800 transition text-red-400 font-semibold focus:outline-none">
+              <span class="flex items-center gap-3">
+                <span class="material-icons-outlined">health_and_safety</span>
+                System Health Check
+              </span>
+              <span class="material-icons-outlined text-xs" x-text="open ? 'expand_less' : 'expand_more'"></span>
+            </button>
+            <ul class="ml-8 space-y-1" x-show="open" x-transition>
+              <li>
+                <a href="{% url 'performance_metrics' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Performance
+                  Metrics</a>
+              </li>
+              <li>
+                <a href="{% url 'technical_diagnostics' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Technical
+                  Diagnostics</a>
+              </li>
+            </ul>
+          </li>
+
+          <!-- Management & Engagement Group -->
+          <li class="uppercase text-xs text-gray-400 px-4 mt-6 mb-1 tracking-wider">Management & Engagement</li>
+          <li x-data="{ open: false }">
+            <button @click="open = !open"
+              class="w-full flex items-center justify-between px-4 py-2 rounded hover:bg-gray-800 transition text-teal-400 font-semibold focus:outline-none">
+              <span class="flex items-center gap-3">
+                <span class="material-icons-outlined">group</span>
+                Team & Users
+              </span>
+              <span class="material-icons-outlined text-xs" x-text="open ? 'expand_less' : 'expand_more'"></span>
+            </button>
+            <ul class="ml-8 space-y-1" x-show="open" x-transition>
+              <li>
+                <a href="{% url 'team_management' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Team
+                  Management</a>
+              </li>
+              <li>
+                <a href="{% url 'activity_log' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Activity Log</a>
+              </li>
+              <li>
+                <a href="{% url 'workforce_planner' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Workforce
+                  Planner</a>
+              </li>
+            </ul>
+          </li>
+          </li>
+          <!-- Employee Training Submenu -->
+          <li x-data="{ open: false }">
+            <button @click="open = !open"
+              class="w-full flex items-center justify-between px-4 py-2 rounded hover:bg-gray-800 transition text-lime-400 font-semibold focus:outline-none">
+              <span class="flex items-center gap-3">
+                <span class="material-icons-outlined">school</span>
+                Employee Training
+              </span>
+              <span class="material-icons-outlined text-xs" x-text="open ? 'expand_less' : 'expand_more'"></span>
+            </button>
+            <ul class="ml-8 space-y-1" x-show="open" x-transition>
+              <li>
+                <a href="{% url 'system_tutorials' %}" class="block px-2 py-1 rounded hover:bg-gray-800">System
+                  Tutorials</a>
+              </li>
+              <li>
+                <a href="{% url 'staff_training' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Staff
+                  Training</a>
+              </li>
+            </ul>
+          </li>
+          <!-- Customer Engagement Submenu -->
+          <li x-data="{ open: false }">
+            <button @click="open = !open"
+              class="w-full flex items-center justify-between px-4 py-2 rounded hover:bg-gray-800 transition text-pink-400 font-semibold focus:outline-none">
+              <span class="flex items-center gap-3">
+                <span class="material-icons-outlined">loyalty</span>
+                Customer Engagement
+              </span>
+              <span class="material-icons-outlined text-xs" x-text="open ? 'expand_less' : 'expand_more'"></span>
+            </button>
+            <ul class="ml-8 space-y-1" x-show="open" x-transition>
+              <li>
+                <a href="{% url 'feedback_tracker' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Feedback
+                  Tracker</a>
+              </li>
+              <li>
+                <a href="{% url 'loyalty_program' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Loyalty
+                  Program</a>
+              </li>
+            </ul>
+          </li>
+
+          <!-- Support & Customization Group -->
+          <li class="uppercase text-xs text-gray-400 px-4 mt-6 mb-1 tracking-wider">Support & Customization</li>
+          <!-- Help & Settings Submenu -->
+          <li x-data="{ open: false }">
+            <button @click="open = !open"
+              class="w-full flex items-center justify-between px-4 py-2 rounded hover:bg-gray-800 transition text-gray-400 font-semibold focus:outline-none">
+              <span class="flex items-center gap-3">
+                <span class="material-icons-outlined">help_outline</span>
+                Help & Settings
+              </span>
+              <span class="material-icons-outlined text-xs" x-text="open ? 'expand_less' : 'expand_more'"></span>
+            </button>
+            <ul class="ml-8 space-y-1" x-show="open" x-transition>
+              <li>
+                <a href="{% url 'user_guide' %}" class="block px-2 py-1 rounded hover:bg-gray-800">User Guide</a>
+              </li>
+              <li>
+                <a href="{% url 'support_center' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Support
+                  Center</a>
+              </li>
+              <li>
+                <a href="{% url 'settings' %}" class="block px-2 py-1 rounded hover:bg-gray-800">System Settings</a>
+              </li>
+            </ul>
+          </li>
+          <!-- Messages & Alerts Submenu -->
+          <li x-data="{ open: false }">
+            <button @click="open = !open"
+              class="w-full flex items-center justify-between px-4 py-2 rounded hover:bg-gray-800 transition text-yellow-400 font-semibold focus:outline-none">
+              <span class="flex items-center gap-3">
+                <span class="material-icons-outlined">notifications_active</span>
+                Messages & Alerts
+              </span>
+              <span class="material-icons-outlined text-xs" x-text="open ? 'expand_less' : 'expand_more'"></span>
+            </button>
+            <ul class="ml-8 space-y-1" x-show="open" x-transition>
+              <li>
+                <a href="{% url 'incoming_tasks' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Incoming
+                  Tasks</a>
+              </li>
+              <li>
+                <a href="{% url 'system_notifications' %}" class="block px-2 py-1 rounded hover:bg-gray-800">System
+                  Notifications</a>
+              </li>
+            </ul>
+          </li>
+          <!-- Task Scheduling Submenu -->
+          <li x-data="{ open: false }">
+            <button @click="open = !open"
+              class="w-full flex items-center justify-between px-4 py-2 rounded hover:bg-gray-800 transition text-blue-400 font-semibold focus:outline-none">
+              <span class="flex items-center gap-3">
+                <span class="material-icons-outlined">event</span>
+                Task Scheduling
+              </span>
+              <span class="material-icons-outlined text-xs" x-text="open ? 'expand_less' : 'expand_more'"></span>
+            </button>
+            <ul class="ml-8 space-y-1" x-show="open" x-transition>
+              <li>
+                <a href="{% url 'task_scheduler' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Task
+                  Scheduler</a>
+              </li>
+              <li>
+                <a href="{% url 'promotion_calendar' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Promotion
+                  Calendar</a>
+              </li>
+            </ul>
+          </li>
+
         </ul>
       </nav>
     </aside>
 
     <!-- Main Content -->
-    <div class="flex-1 flex flex-col">
-      <!-- Topbar -->
-      <header class="bg-white shadow px-6 py-4 flex justify-between items-center">
-        <h1 class="text-lg font-semibold">Lumbung POS</h1>
-        <div class="text-sm text-gray-600">
-          Selamat datang, {{ request.user.username }}
-        </div>
-      </header>
-
-      <!-- Content -->
-      <main class="flex-1 p-6">
-        {% block content %}{% endblock %}
-      </main>
+    <div class="content-scroll">
+      <div class="flex-1 flex flex-col">
+        <main class="flex-1 p-6">
+          {% block content %}{% endblock %}
+        </main>
+      </div>
     </div>
-
   </div>
 
+  <!-- Google Material Icons CDN (for icons) -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
 </body>
+
 </html>

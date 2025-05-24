@@ -3,25 +3,55 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<h1 class="text-3xl font-bold mb-6">Dashboard</h1>
+<h1 class="text-3xl font-bold mb-8 flex items-center gap-3">
+  <span class="inline-block bg-gradient-to-r from-green-400 to-blue-500 text-white px-4 py-2 rounded-lg shadow">Dashboard</span>
+  <span class="text-base font-normal text-gray-400">/ Home</span>
+</h1>
 
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
   <!-- Total Penjualan Hari Ini -->
-  <div class="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition-all">
-    <h2 class="text-lg font-semibold mb-2">Total Penjualan Hari Ini</h2>
-    <p class="text-3xl font-bold text-green-600">Rp 1.250.000</p>
+  <div class="bg-gradient-to-br from-green-100 to-green-300 p-6 rounded-2xl shadow-lg flex items-center gap-4 hover:scale-105 transition-transform">
+    <div class="bg-green-500 text-white rounded-full p-4">
+      <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M12 8v4l3 3"></path>
+        <circle cx="12" cy="12" r="10"></circle>
+      </svg>
+    </div>
+    <div>
+      <h2 class="text-lg font-semibold mb-1">Total Penjualan Hari Ini</h2>
+      <p class="text-3xl font-bold text-green-700">Rp {{ total_penjualan|default:"0" }}</p>
+      <span class="text-xs text-green-800">Penjualan update realtime</span>
+    </div>
   </div>
 
   <!-- Stok Produk Menipis -->
-  <div class="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition-all">
-    <h2 class="text-lg font-semibold mb-2">Stok Produk Menipis</h2>
-    <p class="text-3xl font-bold text-red-500">12 Item</p>
+  <div class="bg-gradient-to-br from-red-100 to-red-300 p-6 rounded-2xl shadow-lg flex items-center gap-4 hover:scale-105 transition-transform">
+    <div class="bg-red-500 text-white rounded-full p-4">
+      <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M12 8v4l3 3"></path>
+        <circle cx="12" cy="12" r="10"></circle>
+      </svg>
+    </div>
+    <div>
+      <h2 class="text-lg font-semibold mb-1">Stok Produk Menipis</h2>
+      <p class="text-3xl font-bold text-red-700">{{ stok_menipis|default:"0" }} Item</p>
+      <span class="text-xs text-red-800">Segera lakukan restock</span>
+    </div>
   </div>
 
   <!-- Transaksi Belum Selesai -->
-  <div class="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition-all">
-    <h2 class="text-lg font-semibold mb-2">Transaksi Belum Diselesaikan</h2>
-    <p class="text-3xl font-bold text-yellow-600">5</p>
+  <div class="bg-gradient-to-br from-yellow-100 to-yellow-300 p-6 rounded-2xl shadow-lg flex items-center gap-4 hover:scale-105 transition-transform">
+    <div class="bg-yellow-500 text-white rounded-full p-4">
+      <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M12 8v4l3 3"></path>
+        <circle cx="12" cy="12" r="10"></circle>
+      </svg>
+    </div>
+    <div>
+      <h2 class="text-lg font-semibold mb-1">Transaksi Belum Diselesaikan</h2>
+      <p class="text-3xl font-bold text-yellow-700">{{ transaksi_belum_selesai|default:"0" }}</p>
+      <span class="text-xs text-yellow-800">Periksa transaksi tertunda</span>
+    </div>
   </div>
 </div>
 {% endblock %}
