@@ -40,4 +40,6 @@ urlpatterns = [
     path('messages/system-notifications/', views.system_notifications, name='system_notifications'),
     path('tasks/scheduler/', views.task_scheduler, name='task_scheduler'),
     path('tasks/promotion-calendar/', views.promotion_calendar, name='promotion_calendar'),
+    path('profile/', views.profile, name='profile'),
+    path('form_logout/', views.form_logout, name='form_logout'),
 ]

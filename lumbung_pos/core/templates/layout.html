@@ -11,23 +11,75 @@
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 
-<body class="bg-gray-100 text-gray-900 font-sans">
+<body class="bg-gray-100 text-gray-900 font-sans" x-data="{ sidebarOpen: false }">
 
   <!-- Topbar -->
-  <header class="bg-white shadow px-6 py-4 flex justify-between items-center topbar-fixed">
-    <div class="flex items-center gap-3">
-      <span class="text-xl font-bold">Lumbung POS</span>
-    </div>
-    <div class="text-sm text-gray-600">
-      Selamat datang, <span class="font-semibold">{{ request.user.username }}</span>
+  <header class="topbar-fixed bg-white shadow-sm border-b border-gray-200 z-50">
+    <div class="flex justify-between items-center h-16 px-4 sm:px-6 lg:px-8">
+      <!-- Brand + Hamburger (Mobile) -->
+      <div class="flex items-center gap-4">
+        <!-- Hamburger Button (Mobile Only) -->
+        <button @click="sidebarOpen = !sidebarOpen" class="sm:hidden p-2 rounded hover:bg-gray-100 focus:outline-none">
+          <span class="material-icons-outlined">menu</span>
+        </button>
+        <a href="/" class="flex items-center gap-2 text-blue-700 hover:text-blue-800 transition-colors group">
+          <span class="material-icons-outlined group-hover:scale-105 transition-transform">store</span>
+          <span class="text-lg font-bold">Lumbung POS</span>
+        </a>
+      </div>
+
+      <!-- Right Area with better spacing -->
+      <<div class="flex items-center gap-6 topbar-nav">
+        <!-- Notification Counter Badge -->
+        <div class="relative" x-data="{ open: false, count: 3 }">
+          <button @click="open = !open"
+            class="relative flex items-center p-2 rounded-lg hover:bg-gray-100 transition-colors focus:outline-none">
+            <span class="material-icons-outlined text-gray-600">notifications</span>
+            <span x-show="count > 0"
+              class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center"
+              style="font-size: 0.75rem;">
+              <span x-text="count"></span>
+            </span>
+          </button>
+          <!-- Notification dropdown bisa ditambahkan di sini -->
+        </div>
+
+        <!-- User Profile Dropdown -->
+        <div class="relative topbar-user" x-data="{ open: false }">
+          <button @click="open = !open"
+            class="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100 transition-colors focus:outline-none">
+            <span class="font-medium text-gray-700">{{ request.user.username }}</span>
+            <span class="material-icons-outlined text-gray-500 text-sm transition-transform duration-200"
+              :class="{'rotate-180': open}">expand_more</span>
+          </button>
+          <div x-show="open" @click.away="open = false"
+            class="absolute right-0 mt-2 w-44 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50"
+            x-transition>
+            <a href="{% url 'settings' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Settings</a>
+            <form method="post" action="{% url 'form_logout' %}">
+              {% csrf_token %}
+              <button type="submit" class="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100">Logout</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Theme Toggle Button -->
+        <button @click="$root.$emit('toggle-theme')"
+          class="p-2 rounded-lg hover:bg-gray-100 transition-colors focus:outline-none flex items-center">
+          <span class="material-icons-outlined text-gray-600">light_mode</span>
+        </button>
     </div>
   </header>
 
   <div class="flex min-h-screen">
     <!-- Sidebar -->
-    <aside class="bg-white text-gray-900 flex flex-col shadow-lg sidebar-fixed border-r border-gray-200">
-      <div class="p-6 text-lg font-bold border-b border-gray-200 tracking-wide flex items-center gap-2 text-blue-800">
-        <span class="text-blue-500">●</span> Menu
+    <aside class="bg-white text-gray-900 flex flex-col shadow-lg sidebar-fixed border-r border-gray-200
+  transition-transform duration-200 z-40
+  fixed sm:static inset-y-0 left-0 w-64
+  sm:translate-x-0" :class="{ '-translate-x-full': !sidebarOpen, 'translate-x-0': sidebarOpen }"
+      @click.away="sidebarOpen = false" x-show="sidebarOpen || window.innerWidth >= 640" x-transition>
+      <div class="p-6 text-lg font-bold border-b border-gray-200 tracking-wide flex items-center gap-2 text-blue-900">
+        <span class="text-blue-700">●</span> Menu
       </div>
       <nav class="flex-1 mt-4 overflow-y-auto">
         <ul class="space-y-2 px-2 text-base">
@@ -40,23 +92,25 @@
               Dashboard
             </a>
           </li>
-          <a href="{% url 'notifications' %}"
-            class="flex items-center gap-3 px-4 py-2 rounded hover:bg-gray-800 transition {% if request.resolver_match.url_name == 'notifications' %}bg-yellow-700 text-white font-bold{% endif %}">
-            <span class="material-icons-outlined text-yellow-400">notifications</span>
-            Inbox
-          </a>
+          <!-- Notifications Link -->
+          <li>
+            <a href="{% url 'notifications' %}"
+              class="flex items-center gap-3 px-4 py-2 rounded hover:bg-blue-50 transition text-blue-900 font-semibold">
+              <span class="material-icons-outlined text-blue-400">notifications</span>
+              Inbox
+            </a>
           </li>
           <!-- Products Dropdown -->
           <li x-data="{ open: false }">
             <button @click="open = !open"
-              class="w-full flex items-center justify-between px-4 py-2 rounded-lg font-semibold text-blue-800 bg-white hover:bg-blue-50 focus:bg-blue-100 transition focus:outline-none">
+              class="w-full flex items-center justify-between px-4 py-2 rounded-lg font-semibold text-blue-900 bg-white hover:bg-blue-50 focus:bg-blue-100 transition focus:outline-none">
               <span class="flex items-center gap-3">
                 <span class="material-icons-outlined">inventory_2</span>
                 Products
               </span>
               <span class="material-icons-outlined text-xs" x-text="open ? 'expand_less' : 'expand_more'"></span>
             </button>
-            <ul class="ml-8 mt-1 space-y-1" x-show="open" x-transition>
+            <ul class="ml-8 space-y-1 py-1" x-show="open" x-transition>
               <li>
                 <a href="{% url 'products' %}" class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Product
                   List</a>
@@ -74,295 +128,310 @@
           <!-- Inventory Management Submenu -->
           <li x-data="{ open: false }">
             <button @click="open = !open"
-              class="w-full flex items-center gap-3 px-4 py-2 rounded hover:bg-gray-800 transition text-yellow-400 font-semibold focus:outline-none">
+              class="w-full flex items-center gap-3 px-4 py-2 rounded hover:bg-blue-50 transition text-blue-900 font-semibold focus:outline-none">
               <span class="material-icons-outlined">store</span>
               Inventory Management
               <span class="ml-auto material-icons-outlined text-xs"
                 x-text="open ? 'expand_less' : 'expand_more'"></span>
             </button>
-            <ul class="ml-8 space-y-1" x-show="open" x-transition>
+            <ul class="ml-8 space-y-1 py-1" x-show="open" x-transition>
               <li>
-                <a href="{% url 'inventory_planner' %}" class="block px-2 py-1 rounded hover:bg-gray-800">
-                  Inventory Planner
-                </a>
+                <a href="{% url 'inventory_planner' %}"
+                  class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Inventory Planner</a>
               </li>
               <li>
-                <a href="{% url 'stock_movement' %}" class="block px-2 py-1 rounded hover:bg-gray-800">
-                  Stock Movement
-                </a>
+                <a href="{% url 'stock_movement' %}"
+                  class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Stock Movement</a>
               </li>
             </ul>
           </li>
           <!-- Sales Submenu -->
           <li x-data="{ open: false }">
             <button @click="open = !open"
-              class="w-full flex items-center gap-3 px-4 py-2 rounded hover:bg-gray-800 transition text-pink-400 font-semibold focus:outline-none">
+              class="w-full flex items-center gap-3 px-4 py-2 rounded hover:bg-blue-50 transition text-blue-900 font-semibold focus:outline-none">
               <span class="material-icons-outlined">point_of_sale</span>
               Sales
               <span class="ml-auto material-icons-outlined text-xs"
                 x-text="open ? 'expand_less' : 'expand_more'"></span>
             </button>
-            <ul class="ml-8 space-y-1" x-show="open" x-transition>
+            <ul class="ml-8 space-y-1 py-1" x-show="open" x-transition>
               <li>
-                <a href="{% url 'sales_insights' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Sales
-                  Insights</a>
+                <a href="{% url 'sales_insights' %}"
+                  class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Sales Insights</a>
               </li>
               <li>
-                <a href="{% url 'pricing_strategies' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Pricing
-                  Strategies</a>
+                <a href="{% url 'pricing_strategies' %}"
+                  class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Pricing Strategies</a>
               </li>
               <li>
-                <a href="{% url 'store_comparison' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Store
-                  Comparison</a>
+                <a href="{% url 'store_comparison' %}"
+                  class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Store Comparison</a>
               </li>
             </ul>
           </li>
           <!-- Transfer & Logistics Submenu -->
           <li x-data="{ open: false }">
             <button @click="open = !open"
-              class="w-full flex items-center justify-between px-4 py-2 rounded hover:bg-gray-800 transition text-purple-400 font-semibold focus:outline-none">
+              class="w-full flex items-center justify-between px-4 py-2 rounded hover:bg-blue-50 transition text-blue-900 font-semibold focus:outline-none">
               <span class="flex items-center gap-3">
                 <span class="material-icons-outlined">swap_horiz</span>
                 Transfer & Logistics
               </span>
               <span class="material-icons-outlined text-xs" x-text="open ? 'expand_less' : 'expand_more'"></span>
             </button>
-            <ul class="ml-8 space-y-1" x-show="open" x-transition>
+            <ul class="ml-8 space-y-1 py-1" x-show="open" x-transition>
               <li>
-                <a href="{% url 'request_items' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Request Items</a>
+                <a href="{% url 'request_items' %}"
+                  class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Request Items</a>
               </li>
               <li>
-                <a href="{% url 'shipments_tracking' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Shipments
-                  Tracking</a>
+                <a href="{% url 'shipments_tracking' %}"
+                  class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Shipments Tracking</a>
               </li>
               <li>
-                <a href="{% url 'delivery_status' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Delivery
-                  Status</a>
+                <a href="{% url 'delivery_status' %}"
+                  class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Delivery Status</a>
               </li>
             </ul>
           </li>
 
           <!-- Secondary Group (Analysis & Support) -->
           <li class="uppercase text-xs text-gray-400 px-4 mt-6 mb-1 tracking-wider">Analysis & Support</li>
+
           <!-- Reports & Analytics Submenu -->
           <li x-data="{ open: false }">
             <button @click="open = !open"
-              class="w-full flex items-center justify-between px-4 py-2 rounded hover:bg-gray-800 transition text-indigo-400 font-semibold focus:outline-none">
+              class="w-full flex items-center justify-between px-4 py-2 rounded hover:bg-blue-50 transition text-blue-900 font-semibold focus:outline-none">
               <span class="flex items-center gap-3">
                 <span class="material-icons-outlined">bar_chart</span>
                 Reports & Analytics
               </span>
               <span class="material-icons-outlined text-xs" x-text="open ? 'expand_less' : 'expand_more'"></span>
             </button>
-            <ul class="ml-8 space-y-1" x-show="open" x-transition>
+            <ul class="ml-8 space-y-1 py-1" x-show="open" x-transition>
               <li>
-                <a href="{% url 'reports' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Reports</a>
+                <a href="{% url 'reports' %}"
+                  class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Reports</a>
               </li>
               <li>
-                <a href="{% url 'market_trends' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Market Trends</a>
+                <a href="{% url 'market_trends' %}"
+                  class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Market Trends</a>
               </li>
               <li>
-                <a href="{% url 'custom_reports' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Custom
-                  Reports</a>
+                <a href="{% url 'custom_reports' %}"
+                  class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Custom Reports</a>
               </li>
             </ul>
           </li>
+
           <!-- Market Research Submenu -->
           <li x-data="{ open: false }">
             <button @click="open = !open"
-              class="w-full flex items-center justify-between px-4 py-2 rounded hover:bg-gray-800 transition text-orange-400 font-semibold focus:outline-none">
+              class="w-full flex items-center justify-between px-4 py-2 rounded hover:bg-blue-50 transition text-blue-900 font-semibold focus:outline-none">
               <span class="flex items-center gap-3">
                 <span class="material-icons-outlined">insights</span>
                 Market Research
               </span>
               <span class="material-icons-outlined text-xs" x-text="open ? 'expand_less' : 'expand_more'"></span>
             </button>
-            <ul class="ml-8 space-y-1" x-show="open" x-transition>
+            <ul class="ml-8 space-y-1 py-1" x-show="open" x-transition>
               <li>
-                <a href="{% url 'competitor_analysis' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Competitor
-                  Analysis</a>
+                <a href="{% url 'competitor_analysis' %}"
+                  class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Competitor Analysis</a>
               </li>
               <li>
-                <a href="{% url 'vendor_management' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Vendor
-                  Management</a>
+                <a href="{% url 'vendor_management' %}"
+                  class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Vendor Management</a>
               </li>
             </ul>
           </li>
+
           <!-- Business Dynamics Submenu -->
           <li x-data="{ open: false }">
             <button @click="open = !open"
-              class="w-full flex items-center justify-between px-4 py-2 rounded hover:bg-gray-800 transition text-cyan-400 font-semibold focus:outline-none">
+              class="w-full flex items-center justify-between px-4 py-2 rounded hover:bg-blue-50 transition text-blue-900 font-semibold focus:outline-none">
               <span class="flex items-center gap-3">
                 <span class="material-icons-outlined">trending_up</span>
                 Business Dynamics
               </span>
               <span class="material-icons-outlined text-xs" x-text="open ? 'expand_less' : 'expand_more'"></span>
             </button>
-            <ul class="ml-8 space-y-1" x-show="open" x-transition>
+            <ul class="ml-8 space-y-1 py-1" x-show="open" x-transition>
               <li>
-                <a href="{% url 'business_health' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Business
-                  Health</a>
+                <a href="{% url 'business_health' %}"
+                  class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Business Health</a>
               </li>
               <li>
-                <a href="{% url 'trend_tracker' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Trend Tracker</a>
+                <a href="{% url 'trend_tracker' %}"
+                  class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Trend Tracker</a>
               </li>
             </ul>
           </li>
+
           <!-- System Health Check Submenu -->
           <li x-data="{ open: false }">
             <button @click="open = !open"
-              class="w-full flex items-center justify-between px-4 py-2 rounded hover:bg-gray-800 transition text-red-400 font-semibold focus:outline-none">
+              class="w-full flex items-center justify-between px-4 py-2 rounded hover:bg-blue-50 transition text-blue-900 font-semibold focus:outline-none">
               <span class="flex items-center gap-3">
                 <span class="material-icons-outlined">health_and_safety</span>
                 System Health Check
               </span>
               <span class="material-icons-outlined text-xs" x-text="open ? 'expand_less' : 'expand_more'"></span>
             </button>
-            <ul class="ml-8 space-y-1" x-show="open" x-transition>
+            <ul class="ml-8 space-y-1 py-1" x-show="open" x-transition>
               <li>
-                <a href="{% url 'performance_metrics' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Performance
-                  Metrics</a>
+                <a href="{% url 'performance_metrics' %}"
+                  class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Performance Metrics</a>
               </li>
               <li>
-                <a href="{% url 'technical_diagnostics' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Technical
-                  Diagnostics</a>
+                <a href="{% url 'technical_diagnostics' %}"
+                  class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Technical Diagnostics</a>
               </li>
             </ul>
           </li>
 
           <!-- Management & Engagement Group -->
           <li class="uppercase text-xs text-gray-400 px-4 mt-6 mb-1 tracking-wider">Management & Engagement</li>
+
+          <!-- Team & Users Submenu -->
           <li x-data="{ open: false }">
             <button @click="open = !open"
-              class="w-full flex items-center justify-between px-4 py-2 rounded hover:bg-gray-800 transition text-teal-400 font-semibold focus:outline-none">
+              class="w-full flex items-center justify-between px-4 py-2 rounded hover:bg-blue-50 transition text-blue-900 font-semibold focus:outline-none">
               <span class="flex items-center gap-3">
                 <span class="material-icons-outlined">group</span>
                 Team & Users
               </span>
               <span class="material-icons-outlined text-xs" x-text="open ? 'expand_less' : 'expand_more'"></span>
             </button>
-            <ul class="ml-8 space-y-1" x-show="open" x-transition>
+            <ul class="ml-8 space-y-1 py-1" x-show="open" x-transition>
               <li>
-                <a href="{% url 'team_management' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Team
-                  Management</a>
+                <a href="{% url 'team_management' %}"
+                  class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Team Management</a>
               </li>
               <li>
-                <a href="{% url 'activity_log' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Activity Log</a>
+                <a href="{% url 'activity_log' %}"
+                  class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Activity Log</a>
               </li>
               <li>
-                <a href="{% url 'workforce_planner' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Workforce
-                  Planner</a>
+                <a href="{% url 'workforce_planner' %}"
+                  class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Workforce Planner</a>
               </li>
             </ul>
           </li>
-          </li>
+
           <!-- Employee Training Submenu -->
           <li x-data="{ open: false }">
             <button @click="open = !open"
-              class="w-full flex items-center justify-between px-4 py-2 rounded hover:bg-gray-800 transition text-lime-400 font-semibold focus:outline-none">
+              class="w-full flex items-center justify-between px-4 py-2 rounded hover:bg-blue-50 transition text-blue-900 font-semibold focus:outline-none">
               <span class="flex items-center gap-3">
                 <span class="material-icons-outlined">school</span>
                 Employee Training
               </span>
               <span class="material-icons-outlined text-xs" x-text="open ? 'expand_less' : 'expand_more'"></span>
             </button>
-            <ul class="ml-8 space-y-1" x-show="open" x-transition>
+            <ul class="ml-8 space-y-1 py-1" x-show="open" x-transition>
               <li>
-                <a href="{% url 'system_tutorials' %}" class="block px-2 py-1 rounded hover:bg-gray-800">System
-                  Tutorials</a>
+                <a href="{% url 'system_tutorials' %}"
+                  class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">System Tutorials</a>
               </li>
               <li>
-                <a href="{% url 'staff_training' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Staff
-                  Training</a>
+                <a href="{% url 'staff_training' %}"
+                  class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Staff Training</a>
               </li>
             </ul>
           </li>
+
           <!-- Customer Engagement Submenu -->
           <li x-data="{ open: false }">
             <button @click="open = !open"
-              class="w-full flex items-center justify-between px-4 py-2 rounded hover:bg-gray-800 transition text-pink-400 font-semibold focus:outline-none">
+              class="w-full flex items-center justify-between px-4 py-2 rounded hover:bg-blue-50 transition text-blue-900 font-semibold focus:outline-none">
               <span class="flex items-center gap-3">
                 <span class="material-icons-outlined">loyalty</span>
                 Customer Engagement
               </span>
               <span class="material-icons-outlined text-xs" x-text="open ? 'expand_less' : 'expand_more'"></span>
             </button>
-            <ul class="ml-8 space-y-1" x-show="open" x-transition>
+            <ul class="ml-8 space-y-1 py-1" x-show="open" x-transition>
               <li>
-                <a href="{% url 'feedback_tracker' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Feedback
-                  Tracker</a>
+                <a href="{% url 'feedback_tracker' %}"
+                  class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Feedback Tracker</a>
               </li>
               <li>
-                <a href="{% url 'loyalty_program' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Loyalty
-                  Program</a>
+                <a href="{% url 'loyalty_program' %}"
+                  class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Loyalty Program</a>
               </li>
             </ul>
           </li>
 
           <!-- Support & Customization Group -->
           <li class="uppercase text-xs text-gray-400 px-4 mt-6 mb-1 tracking-wider">Support & Customization</li>
+
           <!-- Help & Settings Submenu -->
           <li x-data="{ open: false }">
             <button @click="open = !open"
-              class="w-full flex items-center justify-between px-4 py-2 rounded hover:bg-gray-800 transition text-gray-400 font-semibold focus:outline-none">
+              class="w-full flex items-center justify-between px-4 py-2 rounded hover:bg-blue-50 transition text-blue-900 font-semibold focus:outline-none">
               <span class="flex items-center gap-3">
                 <span class="material-icons-outlined">help_outline</span>
                 Help & Settings
               </span>
               <span class="material-icons-outlined text-xs" x-text="open ? 'expand_less' : 'expand_more'"></span>
             </button>
-            <ul class="ml-8 space-y-1" x-show="open" x-transition>
+            <ul class="ml-8 space-y-1 py-1" x-show="open" x-transition>
               <li>
-                <a href="{% url 'user_guide' %}" class="block px-2 py-1 rounded hover:bg-gray-800">User Guide</a>
+                <a href="{% url 'user_guide' %}" class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">User
+                  Guide</a>
               </li>
               <li>
-                <a href="{% url 'support_center' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Support
-                  Center</a>
+                <a href="{% url 'support_center' %}"
+                  class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Support Center</a>
               </li>
               <li>
-                <a href="{% url 'settings' %}" class="block px-2 py-1 rounded hover:bg-gray-800">System Settings</a>
+                <a href="{% url 'settings' %}" class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">System
+                  Settings</a>
               </li>
             </ul>
           </li>
+
           <!-- Messages & Alerts Submenu -->
           <li x-data="{ open: false }">
             <button @click="open = !open"
-              class="w-full flex items-center justify-between px-4 py-2 rounded hover:bg-gray-800 transition text-yellow-400 font-semibold focus:outline-none">
+              class="w-full flex items-center justify-between px-4 py-2 rounded hover:bg-blue-50 transition text-blue-900 font-semibold focus:outline-none">
               <span class="flex items-center gap-3">
                 <span class="material-icons-outlined">notifications_active</span>
                 Messages & Alerts
               </span>
               <span class="material-icons-outlined text-xs" x-text="open ? 'expand_less' : 'expand_more'"></span>
             </button>
-            <ul class="ml-8 space-y-1" x-show="open" x-transition>
+            <ul class="ml-8 space-y-1 py-1" x-show="open" x-transition>
               <li>
-                <a href="{% url 'incoming_tasks' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Incoming
-                  Tasks</a>
+                <a href="{% url 'incoming_tasks' %}"
+                  class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Incoming Tasks</a>
               </li>
               <li>
-                <a href="{% url 'system_notifications' %}" class="block px-2 py-1 rounded hover:bg-gray-800">System
-                  Notifications</a>
+                <a href="{% url 'system_notifications' %}"
+                  class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">System Notifications</a>
               </li>
             </ul>
           </li>
+
           <!-- Task Scheduling Submenu -->
           <li x-data="{ open: false }">
             <button @click="open = !open"
-              class="w-full flex items-center justify-between px-4 py-2 rounded hover:bg-gray-800 transition text-blue-400 font-semibold focus:outline-none">
+              class="w-full flex items-center justify-between px-4 py-2 rounded hover:bg-blue-50 transition text-blue-900 font-semibold focus:outline-none">
               <span class="flex items-center gap-3">
                 <span class="material-icons-outlined">event</span>
                 Task Scheduling
               </span>
               <span class="material-icons-outlined text-xs" x-text="open ? 'expand_less' : 'expand_more'"></span>
             </button>
-            <ul class="ml-8 space-y-1" x-show="open" x-transition>
+            <ul class="ml-8 space-y-1 py-1" x-show="open" x-transition>
               <li>
-                <a href="{% url 'task_scheduler' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Task
-                  Scheduler</a>
+                <a href="{% url 'task_scheduler' %}"
+                  class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Task Scheduler</a>
               </li>
               <li>
-                <a href="{% url 'promotion_calendar' %}" class="block px-2 py-1 rounded hover:bg-gray-800">Promotion
-                  Calendar</a>
+                <a href="{% url 'promotion_calendar' %}"
+                  class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Promotion Calendar</a>
               </li>
             </ul>
           </li>

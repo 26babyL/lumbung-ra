@@ -74,6 +74,11 @@ def task_scheduler(request):
     return render(request, 'task_scheduler.html')
 def promotion_calendar(request): 
     return render(request, 'promotion_calendar.html')
+def profile(request): 
+    return render(request, 'profile.html')
+def form_logout(request): 
+    return render(request, 'form_logout.html')
+
 @user_passes_test(lambda u: u.is_superuser)
 @login_required
 def admin_dashboard(request):
