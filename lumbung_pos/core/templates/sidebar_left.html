@@ -1,12 +1,13 @@
 <aside class="bg-white text-gray-900 flex flex-col shadow-lg sidebar-fixed border-r border-gray-200
   transition-transform duration-200 z-40
   fixed sm:static inset-y-0 left-0 w-64
-  sm:translate-x-0"
-  :class="{ '-translate-x-full': !sidebarOpen, 'translate-x-0': sidebarOpen }"
+  sm:translate-x-0" :class="{ '-translate-x-full': !sidebarOpen, 'translate-x-0': sidebarOpen }"
   @click.away="sidebarOpen = false" x-show="sidebarOpen || window.innerWidth >= 640" x-transition>
 
   <div class="p-6 text-lg font-bold border-b border-gray-200 tracking-wide flex items-center gap-2 text-blue-900">
-    <img src="{{ request.user.profile.photo.url|default:'https://ui-avatars.com/api/?name='|add:request.user.username }}" alt="User Photo" class="w-10 h-10 rounded-full object-cover border border-gray-300">
+    <img
+      src="{{ request.user.profile.photo.url|default:'https://ui-avatars.com/api/?name='|add:request.user.username }}"
+      alt="User Photo" class="w-10 h-10 rounded-full object-cover border border-gray-300">
     <span class="font-semibold text-blue-900">{{ request.user.get_full_name|default:request.user.username }}</span>
   </div>
 
@@ -42,23 +43,29 @@
           <span class="material-icons-outlined text-xs" x-text="open ? 'expand_less' : 'expand_more'"></span>
         </button>
         <ul class="ml-8 space-y-1 py-1" x-show="open" x-transition>
-          <li><a href="{% url 'products' %}" class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Product List</a></li>
-          <li><a href="{% url 'add_product' %}" class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Add New Product</a></li>
-          <li><a href="{% url 'categories' %}" class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Product Categories</a></li>
+          <li><a href="{% url 'products' %}" class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Product
+              List</a></li>
+          <li><a href="{% url 'add_product' %}" class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Add New
+              Product</a></li>
+          <li><a href="{% url 'categories' %}" class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Product
+              Categories</a></li>
         </ul>
       </li>
 
       <!-- Inventory Management -->
       <li x-data="{ open: false }">
         <button @click="open = !open"
-          class="w-full flex items-center gap-3 px-4 py-2 rounded hover:bg-blue-50 transition text-blue-900 font-semibold focus:outline-none">
+        
+          class="w-full flex items-center gap-3 px-4 py-2 rounded hover:bg-blue-50 transition text-blue-900 font-semibold focus:outline-none justify-start text-left">
           <span class="material-icons-outlined">store</span>
           Inventory Management
           <span class="ml-auto material-icons-outlined text-xs" x-text="open ? 'expand_less' : 'expand_more'"></span>
         </button>
         <ul class="ml-8 space-y-1 py-1" x-show="open" x-transition>
-          <li><a href="{% url 'inventory_planner' %}" class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Inventory Planner</a></li>
-          <li><a href="{% url 'stock_movement' %}" class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Stock Movement</a></li>
+          <li><a href="{% url 'inventory_planner' %}"
+              class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Inventory Planner</a></li>
+          <li><a href="{% url 'stock_movement' %}" class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Stock
+              Movement</a></li>
         </ul>
       </li>
 
@@ -71,16 +78,19 @@
           <span class="ml-auto material-icons-outlined text-xs" x-text="open ? 'expand_less' : 'expand_more'"></span>
         </button>
         <ul class="ml-8 space-y-1 py-1" x-show="open" x-transition>
-          <li><a href="{% url 'sales_insights' %}" class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Sales Insights</a></li>
-          <li><a href="{% url 'pricing_strategies' %}" class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Pricing Strategies</a></li>
-          <li><a href="{% url 'store_comparison' %}" class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Store Comparison</a></li>
+          <li><a href="{% url 'sales_insights' %}" class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Sales
+              Insights</a></li>
+          <li><a href="{% url 'pricing_strategies' %}"
+              class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Pricing Strategies</a></li>
+          <li><a href="{% url 'store_comparison' %}"
+              class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Store Comparison</a></li>
         </ul>
       </li>
 
       <!-- Transfer & Logistics -->
       <li x-data="{ open: false }">
         <button @click="open = !open"
-          class="w-full flex items-center justify-between px-4 py-2 rounded hover:bg-blue-50 transition text-blue-900 font-semibold focus:outline-none">
+          class="w-full flex items-center justify-between px-4 py-2 rounded hover:bg-blue-50 transition text-blue-900 font-semibold focus:outline-none justify-start text-left">
           <span class="flex items-center gap-3">
             <span class="material-icons-outlined">swap_horiz</span>
             Transfer & Logistics
@@ -88,9 +98,12 @@
           <span class="material-icons-outlined text-xs" x-text="open ? 'expand_less' : 'expand_more'"></span>
         </button>
         <ul class="ml-8 space-y-1 py-1" x-show="open" x-transition>
-          <li><a href="{% url 'request_items' %}" class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Request Items</a></li>
-          <li><a href="{% url 'shipments_tracking' %}" class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Shipments Tracking</a></li>
-          <li><a href="{% url 'delivery_status' %}" class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Delivery Status</a></li>
+          <li><a href="{% url 'request_items' %}"
+              class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Request Items</a></li>
+          <li><a href="{% url 'shipments_tracking' %}"
+              class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Shipments Tracking</a></li>
+          <li><a href="{% url 'delivery_status' %}"
+              class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Delivery Status</a></li>
         </ul>
       </li>
 
@@ -99,7 +112,7 @@
 
       <li x-data="{ open: false }">
         <button @click="open = !open"
-          class="w-full flex items-center justify-between px-4 py-2 rounded hover:bg-blue-50 transition text-blue-900 font-semibold focus:outline-none">
+          class="w-full flex items-center justify-between px-4 py-2 rounded hover:bg-blue-50 transition text-blue-900 font-semibold focus:outline-none justify-start text-left">
           <span class="flex items-center gap-3">
             <span class="material-icons-outlined">bar_chart</span>
             Reports & Analytics
@@ -107,9 +120,12 @@
           <span class="material-icons-outlined text-xs" x-text="open ? 'expand_less' : 'expand_more'"></span>
         </button>
         <ul class="ml-8 space-y-1 py-1" x-show="open" x-transition>
-          <li><a href="{% url 'reports' %}" class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Reports</a></li>
-          <li><a href="{% url 'market_trends' %}" class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Market Trends</a></li>
-          <li><a href="{% url 'custom_reports' %}" class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Custom Reports</a></li>
+          <li><a href="{% url 'reports' %}" class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Reports</a>
+          </li>
+          <li><a href="{% url 'market_trends' %}" class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Market
+              Trends</a></li>
+          <li><a href="{% url 'custom_reports' %}"
+              class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Custom Reports</a></li>
         </ul>
       </li>
 
@@ -123,8 +139,10 @@
           <span class="material-icons-outlined text-xs" x-text="open ? 'expand_less' : 'expand_more'"></span>
         </button>
         <ul class="ml-8 space-y-1 py-1" x-show="open" x-transition>
-          <li><a href="{% url 'competitor_analysis' %}" class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Competitor Analysis</a></li>
-          <li><a href="{% url 'vendor_management' %}" class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Vendor Management</a></li>
+          <li><a href="{% url 'competitor_analysis' %}"
+              class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Competitor Analysis</a></li>
+          <li><a href="{% url 'vendor_management' %}"
+              class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Vendor Management</a></li>
         </ul>
       </li>
 
@@ -141,9 +159,12 @@
           <span class="material-icons-outlined text-xs" x-text="open ? 'expand_less' : 'expand_more'"></span>
         </button>
         <ul class="ml-8 space-y-1 py-1" x-show="open" x-transition>
-          <li><a href="{% url 'team_management' %}" class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Team Management</a></li>
-          <li><a href="{% url 'activity_log' %}" class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Activity Log</a></li>
-          <li><a href="{% url 'workforce_planner' %}" class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Workforce Planner</a></li>
+          <li><a href="{% url 'team_management' %}" class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Team
+              Management</a></li>
+          <li><a href="{% url 'activity_log' %}"
+              class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Activity Log</a></li>
+          <li><a href="{% url 'workforce_planner' %}"
+              class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Workforce Planner</a></li>
         </ul>
       </li>
 
@@ -157,8 +178,10 @@
           <span class="material-icons-outlined text-xs" x-text="open ? 'expand_less' : 'expand_more'"></span>
         </button>
         <ul class="ml-8 space-y-1 py-1" x-show="open" x-transition>
-          <li><a href="{% url 'system_tutorials' %}" class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">System Tutorials</a></li>
-          <li><a href="{% url 'staff_training' %}" class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Staff Training</a></li>
+          <li><a href="{% url 'system_tutorials' %}"
+              class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">System Tutorials</a></li>
+          <li><a href="{% url 'staff_training' %}" class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Staff
+              Training</a></li>
         </ul>
       </li>
 
@@ -175,9 +198,12 @@
           <span class="material-icons-outlined text-xs" x-text="open ? 'expand_less' : 'expand_more'"></span>
         </button>
         <ul class="ml-8 space-y-1 py-1" x-show="open" x-transition>
-          <li><a href="{% url 'user_guide' %}" class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">User Guide</a></li>
-          <li><a href="{% url 'support_center' %}" class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Support Center</a></li>
-          <li><a href="{% url 'settings' %}" class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">System Settings</a></li>
+          <li><a href="{% url 'user_guide' %}" class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">User
+              Guide</a></li>
+          <li><a href="{% url 'support_center' %}"
+              class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Support Center</a></li>
+          <li><a href="{% url 'settings' %}" class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">System
+              Settings</a></li>
         </ul>
       </li>
 
@@ -191,8 +217,10 @@
           <span class="material-icons-outlined text-xs" x-text="open ? 'expand_less' : 'expand_more'"></span>
         </button>
         <ul class="ml-8 space-y-1 py-1" x-show="open" x-transition>
-          <li><a href="{% url 'incoming_tasks' %}" class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Incoming Tasks</a></li>
-          <li><a href="{% url 'system_notifications' %}" class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">System Notifications</a></li>
+          <li><a href="{% url 'incoming_tasks' %}"
+              class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Incoming Tasks</a></li>
+          <li><a href="{% url 'system_notifications' %}"
+              class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">System Notifications</a></li>
         </ul>
       </li>
 
@@ -206,8 +234,10 @@
           <span class="material-icons-outlined text-xs" x-text="open ? 'expand_less' : 'expand_more'"></span>
         </button>
         <ul class="ml-8 space-y-1 py-1" x-show="open" x-transition>
-          <li><a href="{% url 'task_scheduler' %}" class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Task Scheduler</a></li>
-          <li><a href="{% url 'promotion_calendar' %}" class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Promotion Calendar</a></li>
+          <li><a href="{% url 'task_scheduler' %}" class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Task
+              Scheduler</a></li>
+          <li><a href="{% url 'promotion_calendar' %}"
+              class="block px-2 py-1 rounded hover:bg-blue-100 text-blue-900">Promotion Calendar</a></li>
         </ul>
       </li>
 

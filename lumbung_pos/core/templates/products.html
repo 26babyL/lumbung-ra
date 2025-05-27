@@ -3,34 +3,90 @@
 {% block title %}Produk{% endblock %}
 
 {% block content %}
-<div class="flex justify-between items-center mb-6">
-  <h1 class="text-2xl font-bold">Daftar Produk</h1>
-  <a href="{% url 'add_product' %}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">+ Tambah Produk</a>
-</div>
+{% load humanize %}
+<style>
+  /* Membuat header sticky */
+  th {
+    position: sticky;
+    top: 0;
+    background: #1d4ed8;
+    /* warna bg-red-800 */
+    z-index: 1;
+  }
 
-<table class="min-w-full bg-white rounded-xl shadow overflow-hidden">
-  <thead class="bg-gray-100 text-gray-700 text-sm uppercase text-left">
+  /* Scrollbar untuk tbody */
+  .scroll-tbody {
+    max-height: 400px;
+    /* Atur tinggi sesuai kebutuhan */
+    overflow-y: auto;
+    display: block;
+  }
+
+  .scroll-tbody table {
+    width: 100%;
+    border-collapse: separate;
+  }
+
+  .scroll-tbody td {
+    background: #fff;
+  }
+</style>
+<table class="min-w-full divide-y divide-gray-200">
+  <thead class="bg-gray-50">
     <tr>
-      <th class="px-6 py-3">Nama Produk</th>
-      <th class="px-6 py-3">Kategori</th>
-      <th class="px-6 py-3">Harga</th>
-      <th class="px-6 py-3">Stok</th>
+      <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">SKU</th>
+      <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Nama Produk</th>
+      <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Varian</th>
+      <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Harga</th>
+      <!-- Tambahkan ini -->
+      <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Vendor</th>
     </tr>
   </thead>
-  <tbody class="text-gray-800 text-sm divide-y divide-gray-200">
-    <!-- Dummy data dulu -->
-    <tr>
-      <td class="px-6 py-4">Indomie Goreng</td>
-      <td class="px-6 py-4">Makanan</td>
-      <td class="px-6 py-4">Rp 3.500</td>
-      <td class="px-6 py-4">120</td>
-    </tr>
-    <tr>
-      <td class="px-6 py-4">Susu Ultra</td>
-      <td class="px-6 py-4">Minuman</td>
-      <td class="px-6 py-4">Rp 7.000</td>
-      <td class="px-6 py-4">54</td>
-    </tr>
-  </tbody>
 </table>
+<div class="scroll-tbody">
+  <table class="min-w-full divide-y divide-gray-200">
+    <tbody class="text-gray-800 text-sm divide-y divide-gray-200">
+      {% for product in page_obj %}
+      <tr>
+        <td class="px-6 py-4">{{ product.sku }}</td>
+        <td class="px-6 py-4">{{ product.name }}</td>
+        <td class="px-6 py-4">
+          {{ product.option1_value|default_if_none:"" }}
+          {% if product.option1_value and product.option2_value and product.option2_value != "NaN" %} / {% endif %}
+          {% if product.option2_value and product.option2_value != "NaN" %}
+          {{ product.option2_value }}
+          {% endif %}
+        </td>
+        <td class="px-6 py-4">
+          Rp {{ product.selling_price|intcomma }}
+        </td>
+        <td class="px-6 py-4">{{ product.vendor.name }}</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="5" class="px-6 py-4 text-center text-gray-400">Belum ada produk.</td> <!-- Ubah colspan jadi 5 -->
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<div class="mt-4 flex justify-center">
+  <nav class="inline-flex">
+    {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}"
+      class="px-3 py-1 border rounded-l bg-gray-100 hover:bg-gray-200">Previous</a>
+    {% else %}
+    <span class="px-3 py-1 border rounded-l bg-gray-200 text-gray-400 cursor-not-allowed">Previous</span>
+    {% endif %}
+
+    <span class="px-3 py-1 border-t border-b bg-white">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+
+    {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}"
+      class="px-3 py-1 border rounded-r bg-gray-100 hover:bg-gray-200">Next</a>
+    {% else %}
+    <span class="px-3 py-1 border rounded-r bg-gray-200 text-gray-400 cursor-not-allowed">Next</span>
+    {% endif %}
+  </nav>
+</div>
 {% endblock %}

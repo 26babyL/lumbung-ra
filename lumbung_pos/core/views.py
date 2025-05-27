@@ -1,4 +1,7 @@
 from django.shortcuts import render
+from django.shortcuts import render
+from .models import Product
+from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required, user_passes_test
 
 # Create your views here.
@@ -6,8 +9,13 @@ def dashboard(request):
     return render(request, 'dashboard.html')
 def notifications(request): 
     return render(request, 'notifications.html')
-def products(request): 
-    return render(request, 'products.html')
+def products_list(request):
+    product_list = Product.objects.all().order_by('id')
+    paginator = Paginator(product_list, 100)  # 100 produk per halaman
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, "products.html", {"page_obj": page_obj})
 def add_product(request): 
     return render(request, 'add_product.html')
 def categories(request): 

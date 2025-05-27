@@ -8,6 +8,7 @@ html, body {
 /* ============= Topbar Styles ============= */
 .topbar-fixed {
   position: fixed;
+  margin-left: 260px;
   top: 0;
   right: 0;
   left: 0;
@@ -16,6 +17,12 @@ html, body {
   background: #ffffff;
   border-bottom: 1px solid #e5e7eb;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+@media (max-width: 768px) {
+  .topbar-fixed {
+    margin-left: 0;
+    width: 100%;
+  }
 }
 
 .topbar-brand {
@@ -111,12 +118,13 @@ html, body {
 }
 
 /* ============= Sidebar Styles ============= */
+
 .sidebar-fixed {
   position: fixed;
-  top: 64px;
+  top: 0px;
   left: 0;
   bottom: 0;
-  width: 280px;
+  width: 260px;
   z-index: 40;
   overflow-y: auto;
   background: #ffffff;
@@ -182,8 +190,8 @@ html, body {
 
 /* ============= Main Content ============= */
 .main-content {
-  margin-left: 280px;
-  margin-top: 64px;
+  margin-left: 235px;
+  margin-top: 28px;
   min-height: calc(100vh - 64px);
   padding: 1.5rem;
   background-color: #f8fafc;
