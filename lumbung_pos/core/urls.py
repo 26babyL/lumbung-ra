@@ -42,4 +42,6 @@ urlpatterns = [
     path('tasks/promotion-calendar/', views.promotion_calendar, name='promotion_calendar'),
     path('profile/', views.profile, name='profile'),
     path('form_logout/', views.form_logout, name='form_logout'),
+    path('sidebar_left/', views.sidebar_left, name='sidebar_left'),
+    path('sidebar_right/', views.sidebar_right, name='sidebar_right'),
 ]

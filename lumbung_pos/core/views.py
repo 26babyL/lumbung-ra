@@ -78,6 +78,10 @@ def profile(request):
     return render(request, 'profile.html')
 def form_logout(request): 
     return render(request, 'form_logout.html')
+def sidebar_right(request): 
+    return render(request, 'sidebar_right.html')
+def sidebar_left(request): 
+    return render(request, 'sidebar_left.html')
 
 @user_passes_test(lambda u: u.is_superuser)
 @login_required

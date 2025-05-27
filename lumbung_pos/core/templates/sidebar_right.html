@@ -1,0 +1,28 @@
+<aside class="hidden lg:flex flex-col w-80 bg-white border-l border-gray-200 shadow-lg p-4">
+  <!-- Judul panel kanan -->
+  <h2 class="text-lg font-semibold mb-4">Notifikasi</h2>
+
+  <!-- Daftar notifikasi dummy sementara -->
+  <ul class="space-y-2">
+    <li class="bg-blue-50 rounded p-2 text-blue-900 flex justify-between items-center">
+      <span>Produk hampir habis</span>
+      <button class="text-sm text-blue-600 hover:underline">Lihat</button>
+    </li>
+    <li class="bg-blue-50 rounded p-2 text-blue-900 flex justify-between items-center">
+      <span>Pengiriman tertunda</span>
+      <button class="text-sm text-blue-600 hover:underline">Lacak</button>
+    </li>
+    <li class="bg-blue-50 rounded p-2 text-blue-900 flex justify-between items-center">
+      <span>Permintaan restock baru</span>
+      <button class="text-sm text-blue-600 hover:underline">Detail</button>
+    </li>
+  </ul>
+
+  <!-- Tombol aksi tambahan -->
+  <div class="mt-6">
+    <button @click="$dispatch('toggle-theme')"
+      class="w-full px-4 py-2 rounded bg-gray-100 hover:bg-gray-200 text-sm font-medium text-gray-700">
+      Toggle Tema
+    </button>
+  </div>
+</aside>

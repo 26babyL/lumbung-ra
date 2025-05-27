@@ -1,0 +1,216 @@
+/* Base Layout */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* ============= Topbar Styles ============= */
+.topbar-fixed {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 50;
+  height: 64px;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.topbar-brand {
+  color: #1e40af;
+  transition: color 0.2s ease;
+}
+
+.topbar-brand:hover {
+  color: #1d4ed8;
+}
+
+.topbar-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+/* Notification */
+.topbar-notification-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  padding: 0 0.25rem;
+  background: #ef4444;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Dropdown */
+.topbar-dropdown {
+  position: relative;
+}
+
+.topbar-dropdown [x-cloak] {
+  display: none;
+}
+
+.topbar-dropdown-content {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  min-width: 200px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.2s ease;
+  transform-origin: top right;
+}
+
+.topbar-dropdown.open .topbar-dropdown-content {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.topbar-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  color: #4b5563;
+  transition: all 0.2s ease;
+}
+
+.topbar-dropdown-item:hover {
+  background-color: #f8fafc;
+  color: #1e40af;
+}
+
+/* User Profile */
+.topbar-user {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  transition: all 0.2s ease;
+}
+
+.topbar-user:hover {
+  background-color: #f8fafc;
+}
+
+/* ============= Sidebar Styles ============= */
+.sidebar-fixed {
+  position: fixed;
+  top: 64px;
+  left: 0;
+  bottom: 0;
+  width: 280px;
+  z-index: 40;
+  overflow-y: auto;
+  background: #ffffff;
+  border-right: 1px solid #e5e7eb;
+  transition: width 0.3s ease;
+}
+
+/* Scrollbar */
+.sidebar-fixed::-webkit-scrollbar {
+  width: 3px;
+}
+
+.sidebar-fixed::-webkit-scrollbar-track {
+  background: #f8fafc;
+}
+
+.sidebar-fixed::-webkit-scrollbar-thumb {
+  background: #e2e8f0;
+  border-radius: 4px;
+}
+
+.sidebar-fixed::-webkit-scrollbar-thumb:hover {
+  background: #cbd5e1;
+}
+
+/* Active & Hover States */
+.sidebar-active {
+  background-color: #eff6ff;
+  color: #1d4ed8;
+  font-weight: 600;
+  border-radius: 0.5rem;
+}
+
+.sidebar-submenu-active {
+  background-color: #f8fafc;
+  color: #1d4ed8;
+  font-weight: 600;
+  border-radius: 0.375rem;
+}
+
+.sidebar-item:hover,
+.sidebar-menu-item:hover,
+.sidebar-submenu-item:hover {
+  background-color: #f1f5f9;
+  transition: background-color 0.2s ease;
+  border-radius: 0.375rem;
+}
+
+.sidebar-fixed .active {
+  background: #1d4ed8 !important;
+  color: #ffffff !important;
+}
+
+.sidebar-fixed a:hover,
+.sidebar-fixed button:hover {
+  background: #e0e7ff !important;
+  color: #1d4ed8 !important;
+}
+
+.sidebar-dropdown-transition {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============= Main Content ============= */
+.main-content {
+  margin-left: 280px;
+  margin-top: 64px;
+  min-height: calc(100vh - 64px);
+  padding: 1.5rem;
+  background-color: #f8fafc;
+  transition: margin-left 0.3s ease;
+}
+
+/* ============= Responsive Styles ============= */
+@media (max-width: 768px) {
+  .topbar-hamburger {
+    display: block;
+    padding: 0.5rem;
+    margin-right: 0.5rem;
+  }
+
+  .topbar-nav {
+    gap: 1rem;
+  }
+
+  .sidebar-fixed {
+    transform: translateX(-100%);
+  }
+
+  .sidebar-open {
+    transform: translateX(0);
+  }
+
+  .main-content {
+    margin-left: 0;
+  }
+}

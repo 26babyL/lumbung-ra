@@ -9,6 +9,7 @@
   <link href="{% static 'css/dist/styles.css' %}" rel="stylesheet">
   <link href="{% static 'css/dist/customlayout.css' %}" rel="stylesheet">
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
 </head>
 
 <body class="bg-gray-100 text-gray-900 font-sans" x-data="{ sidebarOpen: false }">
@@ -28,8 +29,8 @@
         </a>
       </div>
 
-      <!-- Right Area with better spacing -->
-      <<div class="flex items-center gap-6 topbar-nav">
+      <!-- Right Area -->
+      <div class="flex items-center gap-6 topbar-nav">
         <!-- Notification Counter Badge -->
         <div class="relative" x-data="{ open: false, count: 3 }">
           <button @click="open = !open"
@@ -41,7 +42,6 @@
               <span x-text="count"></span>
             </span>
           </button>
-          <!-- Notification dropdown bisa ditambahkan di sini -->
         </div>
 
         <!-- User Profile Dropdown -->
@@ -68,16 +68,19 @@
           class="p-2 rounded-lg hover:bg-gray-100 transition-colors focus:outline-none flex items-center">
           <span class="material-icons-outlined text-gray-600">light_mode</span>
         </button>
+      </div>
     </div>
   </header>
 
   <div class="flex min-h-screen">
     <!-- Sidebar -->
-    <aside class="bg-white text-gray-900 flex flex-col shadow-lg sidebar-fixed border-r border-gray-200
-  transition-transform duration-200 z-40
-  fixed sm:static inset-y-0 left-0 w-64
-  sm:translate-x-0" :class="{ '-translate-x-full': !sidebarOpen, 'translate-x-0': sidebarOpen }"
-      @click.away="sidebarOpen = false" x-show="sidebarOpen || window.innerWidth >= 640" x-transition>
+    <aside class="sidebar-fixed bg-white text-gray-900 flex flex-col shadow-lg border-r border-gray-200
+      transition-transform duration-200 z-40
+      fixed sm:static inset-y-0 left-0 w-[280px] sm:translate-x-0"
+      :class="{ '-translate-x-full': !sidebarOpen, 'translate-x-0': sidebarOpen }"
+      @click.away="sidebarOpen = false"
+      x-show="sidebarOpen || window.innerWidth < 640 ? sidebarOpen : true"
+      x-transition>
       <div class="p-6 text-lg font-bold border-b border-gray-200 tracking-wide flex items-center gap-2 text-blue-900">
         <span class="text-blue-700">●</span> Menu
       </div>
@@ -87,7 +90,7 @@
           <!-- Dashboard Link -->
           <li>
             <a href="{% url 'dashboard' %}"
-              class="flex items-center gap-3 px-4 py-2 rounded-lg font-semibold text-white bg-blue-700 hover:bg-blue-800 transition">
+              class="flex items-center gap-3 px-4 py-2 rounded-lg font-semibold text-white bg-blue-700 hover:bg-blue-500 hover:scale-105 transition-transform">
               <span class="material-icons-outlined">dashboard</span>
               Dashboard
             </a>
@@ -441,7 +444,7 @@
     </aside>
 
     <!-- Main Content -->
-    <div class="content-scroll">
+    <div class="main-content flex-1 transition-all duration-200">
       <div class="flex-1 flex flex-col">
         <main class="flex-1 p-6">
           {% block content %}{% endblock %}
@@ -451,7 +454,7 @@
   </div>
 
   <!-- Google Material Icons CDN (for icons) -->
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+  
 
 </body>
 
